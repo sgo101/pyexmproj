@@ -8,32 +8,37 @@ from PIL import ImageTk, Image
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGES_PATH = os.path.join(BASE_DIR, 'images')
+# list of all image's file path with ext of jpg
+IMAGES_LIST = glob.glob(os.path.join(IMAGES_PATH, "*.jpg"))
+
 size = (300, 300)
+img_index = 0
 
-
-def images():
-	jpgs = glob.glob(os.path.join(IMAGES_PATH, "*.jpg"))
-	pngs = glob.glob(os.path.join(IMAGES_PATH, "*.png"))
-	return jpgs + pngs
-
-
-
-def on_next():
-	second_img = images()[1]
-	with Image.open(second_img) as img_file:
+def display_img(index):
+	with Image.open(IMAGES_LIST[index]) as img_file:
 		img_file.thumbnail(size)
 		label.img = ImageTk.PhotoImage(img_file)
 		label.config(image=label.img)
 
 
+def on_next():
+	global img_index
+	img_index += 1
+
+	if img_index >= len(IMAGES_LIST):
+		img_index = 0
+
+	display_img(img_index)
+
 
 def on_previous():
-	pass
+	global img_index
+	img_index -= 1
 
+	if img_index >= len(IMAGES_LIST):
+		img_index = 0
 
-
-
-
+	display_img(img_index)
 
 
 root = tk.Tk()
@@ -54,7 +59,7 @@ img_filename_label.pack(side=tk.LEFT, padx=3)
 
 
 # Set first image to label
-img_file = Image.open(images()[0])
+img_file = Image.open(IMAGES_LIST[img_index])
 img_file.thumbnail(size)
 img = ImageTk.PhotoImage(img_file)
 label = ttk.Label(image_frame, image=img)
