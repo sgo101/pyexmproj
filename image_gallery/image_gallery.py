@@ -6,6 +6,8 @@ import tkinter.ttk as ttk
 
 from PIL import ImageTk, Image
 
+
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGES_PATH = os.path.join(BASE_DIR, 'images')
 # list of all image's file path with ext of jpg
@@ -13,6 +15,11 @@ IMAGES_LIST = glob.glob(os.path.join(IMAGES_PATH, "*.jpg"))
 
 size = (300, 300)
 img_index = 0
+
+
+def update_filename():
+	img_filename_label["text"] = IMAGES_LIST[img_index]
+
 
 def display_img(index):
 	with Image.open(IMAGES_LIST[index]) as img_file:
@@ -29,6 +36,7 @@ def on_next():
 		img_index = 0
 
 	display_img(img_index)
+	update_filename()
 
 
 def on_previous():
@@ -39,6 +47,7 @@ def on_previous():
 		img_index = 0
 
 	display_img(img_index)
+	update_filename()
 
 
 root = tk.Tk()
@@ -54,7 +63,7 @@ info_frame.grid(stick=(tk.E, tk.W))
 image_frame.grid(row=1, column=0, sticky=(tk.E, tk.W, tk.S, tk.N))
 tool_frame.grid(row=2, column=0, sticky=(tk.E, tk.W))
 
-img_filename_label = ttk.Label(info_frame, text="Image filename")
+img_filename_label = ttk.Label(info_frame, text=IMAGES_LIST[img_index])
 img_filename_label.pack(side=tk.LEFT, padx=3)
 
 
